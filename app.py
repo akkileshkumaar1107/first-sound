@@ -116,8 +116,8 @@ header[data-testid="stHeader"], [data-testid="stSidebar"], [data-testid="collaps
 .fs-thumb {width:100%; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:12px; margin-bottom:8px;
   outline:3px solid transparent; outline-offset:2px;}
 .fs-thumb.on {outline-color:#a5603a;}
-.fs-samp {min-height:46px; margin:2px 0 8px;}
-.fs-samp b {display:block; font-size:14.5px; color:#1f302b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.fs-samp {margin:2px 0 8px;}
+.fs-samp b {display:block; font-size:14.5px; line-height:1.3; color:#1f302b; min-height:2.6em;}
 .fs-samp span {display:block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#a5603a; margin-top:2px;}
 .st-key-samples [data-testid="stButton"] button, .st-key-samples [data-testid="stDownloadButton"] button {
   white-space:nowrap; min-height:38px; padding:4px 10px; font-size:14px;}
