@@ -116,6 +116,13 @@ header[data-testid="stHeader"], [data-testid="stSidebar"], [data-testid="collaps
 .fs-thumb {width:100%; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:12px; margin-bottom:8px;
   outline:3px solid transparent; outline-offset:2px;}
 .fs-thumb.on {outline-color:#a5603a;}
+.fs-samp {min-height:46px; margin:2px 0 8px;}
+.fs-samp b {display:block; font-size:14.5px; color:#1f302b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.fs-samp span {display:block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#a5603a; margin-top:2px;}
+.st-key-samples [data-testid="stButton"] button, .st-key-samples [data-testid="stDownloadButton"] button {
+  white-space:nowrap; min-height:38px; padding:4px 10px; font-size:14px;}
+.st-key-samples [data-testid="stButton"] button p, .st-key-samples [data-testid="stDownloadButton"] button p {
+  white-space:nowrap; font-size:14px;}
 .st-key-step_go {background:#f5efe3; border:1.5px solid #c08f4f; border-radius:20px; padding:22px 24px !important;}
 [data-testid="stPlotlyChart"] {overflow:hidden; box-sizing:border-box;}
 .st-key-samples [data-testid="stImage"] img {aspect-ratio:4/3; object-fit:cover;}
@@ -636,20 +643,30 @@ def processing_section():
             if 'sample' not in st.session_state:
                 st.session_state['sample'] = '225_2HC.png'
             with st.container(key='samples'):
-                cols = st.columns(len(meta))
-                for c, (_, r) in zip(cols, meta.iterrows()):
-                    with c:
-                        chosen = up is None and st.session_state['sample'] == r['file']
-                        st.markdown(f'<img class="fs-thumb{" on" if chosen else ""}" src="{thumb_uri(str(SAMPLES / r["file"]))}" '
-                                    f'alt="{r["label"]}"><div class="fs-cap" style="font-style:normal"><b>{r["label"]}</b>'
-                                    f'<br>{r["source"]}</div>', unsafe_allow_html=True)
-                        if st.button('Selected ✓' if chosen else 'Use this', key='use_' + r['file'],
-                                     type='primary' if chosen else 'secondary', width='stretch'):
-                            st.session_state['sample'] = r['file']
-                            st.session_state['jump'] = True
-                            st.rerun(scope='fragment')
-                        st.download_button('Download', (SAMPLES / r['file']).read_bytes(), file_name=r['file'],
-                                           mime='image/png', key='dl_' + r['file'], width='stretch')
+                PER_ROW = 4                       # 4 per row: big enough thumbnails, labels on one line
+                rows_ = [meta.iloc[i:i + PER_ROW] for i in range(0, len(meta), PER_ROW)]
+                for chunk in rows_:
+                    cols = st.columns(PER_ROW, gap='medium')
+                    for c, (_, r) in zip(cols, chunk.iterrows()):
+                        with c:
+                            chosen = up is None and st.session_state['sample'] == r['file']
+                            src = 'FETAL PLANES DB' if 'FETAL' in str(r['source']) else str(r['source'])
+                            st.markdown(f'<img class="fs-thumb{" on" if chosen else ""}" '
+                                        f'src="{thumb_uri(str(SAMPLES / r["file"]))}" alt="{r["label"]}">'
+                                        f'<div class="fs-samp"><b>{r["label"]}</b><span>{src}</span></div>',
+                                        unsafe_allow_html=True)
+                            b1, b2 = st.columns([1.35, 1], gap='small')
+                            with b1:
+                                if st.button('Selected ✓' if chosen else 'Use this', key='use_' + r['file'],
+                                             type='primary' if chosen else 'secondary', width='stretch'):
+                                    st.session_state['sample'] = r['file']
+                                    st.session_state['jump'] = True
+                                    st.rerun(scope='fragment')
+                            with b2:
+                                st.download_button('↓ Save', (SAMPLES / r['file']).read_bytes(), file_name=r['file'],
+                                                   mime='image/png', key='dl_' + r['file'], width='stretch',
+                                                   help='Download this scan to try the upload')
+                    st.write('')
 
         ann = None
         if up is not None:
