@@ -1,0 +1,8 @@
+file,label,source,pixel_mm,hc_mm,kind
+225_2HC.png,Fetal head (mid-pregnancy),HC18,0.107154250145,161.6,head
+000_HC.png,Fetal head (early pregnancy),HC18,0.0691358041432,44.3,head
+254_HC.png,Fetal head (late),HC18,0.126939695093,170.5,head
+cervix_Patient01157.png,Maternal cervix (transvaginal),FETAL_PLANES_DB,,,cervix
+brain_Patient00845.png,Fetal brain plane,FETAL_PLANES_DB,,,brain
+abdomen_Patient01692.png,Fetal abdomen,FETAL_PLANES_DB,,,abdomen
+femur_Patient01023.png,Fetal femur,FETAL_PLANES_DB,,,femur
